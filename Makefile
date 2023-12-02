@@ -1,6 +1,17 @@
 
+ifdef OS
+   RM = del /Q
+   DAY = $(cmd set /p input=chose day)
+else
+   ifeq ($(shell uname), Linux)
+      RM = rm -f
+      DAY := $(shell read -p "chose day: " input; echo$(input))
+   endif
+endif
+
+@echo $(DAY)
+
+BUILD_DIR := $(CURDIR)/day$(DAY)
+
 build:
-	@read -p "Enter Day: " day; \
-	@echo $(day);\
-	build_dir := $(CURDIR)/day$(day);\
 	@echo $(build_dir)
