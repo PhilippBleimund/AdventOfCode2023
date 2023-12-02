@@ -1,23 +1,59 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 #define MORE_LINES 1024
 #define MORE_CHARS 1024
 
+char **lines;
+size_t total_lines = 0;
+size_t total_chars = 0;
+
+int calculate01(){
+    int sum = 0;
+
+    for(size_t i = 0; i < total_lines; i++){
+        size_t line_lenght = strlen(lines[i]);
+        printf("line lenght: %zu | ", line_lenght);
+        char left_most;
+        char right_most;
+        for(size_t j = 0;j < line_lenght; j++){
+            if(lines[i][j] <= '9' && lines[i][j] != '\n'){
+                left_most = lines[i][j];
+                printf("%c", left_most);
+                break;
+            }
+        }
+        for(size_t j = line_lenght-1;j >= 0; j--){
+            if(lines[i][j] <= '9' && lines[i][j] != '\n'){
+                right_most = lines[i][j];
+                printf(" %c", right_most);
+                break;
+            }
+        }
+        
+        int sub_sum = 0;
+        sub_sum = (left_most - '0') * 10;
+        sub_sum += right_most - '0';
+        printf("   sum: %d \n", sub_sum);
+
+        sum += sub_sum;
+    }
+    return sum;
+}
+
 int main(void){
-    FILE *file = fopen("file", "r");
+    FILE *file;
+    file = fopen("input.txt", "r");
 
     if (file == NULL){
         printf("Error opening file.\n");
+        perror("Error");
         return 1;
     }
 
-    char **lines;
     lines = malloc(sizeof(char *) * MORE_LINES);
-
-    size_t total_lines = 0;
-    size_t total_chars = 0;
 
     char c;
 
@@ -69,12 +105,15 @@ int main(void){
     } while (true);
     lines = realloc(lines, sizeof(char *) * total_lines);
 
-    for (size_t i = 0; i < total_lines; i++)
-    printf("%s", lines[i]);
+    //for (size_t i = 0; i < total_lines; i++)
+    //    printf("%s", lines[i]);
+
+    int total_sum = calculate01();
+    printf("\n\ntotal Sum: %d\n", total_sum);
 
     // Free the block of memory allocated for each string
     for (size_t i = 0; i < total_lines; i++)
-    free(lines[i]);
+        free(lines[i]);
 
     free(lines);
 
