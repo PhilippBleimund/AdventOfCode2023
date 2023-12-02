@@ -15,5 +15,6 @@ create:
 	touch $(BUILD_DIR)/main.c
 
 build: $(BUILD_DIR)/main.c
-	mkdir $(BUILD_DIR)/build
-	gcc $(BUILD_DIR)/main.c -o main
+	gcc $(BUILD_DIR)/main.c -o $(BUILD_DIR)/main
+	@echo "Programm output\n -------------------- \n\n"
+	cd $(BUILD_DIR); ./main
