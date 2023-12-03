@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/home/philippbleimund/git/AdventOfCode2023/day02",
-      "program": "/home/philippbleimund/git/AdventOfCode2023/day02/build/Debug/outDebug",
+      "cwd": "/home/philippbleimund/git/AdventOfCode2023/day03",
+      "program": "/home/philippbleimund/git/AdventOfCode2023/day03/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
