@@ -10,10 +10,17 @@ char **lines;
 size_t total_lines = 0;
 size_t total_chars = 0;
 
-void readFile(){
-    FILE *file;
-    file = fopen("input.txt", "r");
+char colors[3][6] = {"red", "green", "blue"};
+int max_number[3] = {12, 13, 14};
 
+void calculate01(){
+    
+    for(int i = 0; i < total_lines; i++){
+        
+    }
+}
+
+void readFile(FILE *file){
     if (file == NULL){
         printf("Error opening file.\n");
         perror("Error");
@@ -76,8 +83,10 @@ void readFile(){
 }
 
 int main(){
-
-
+    
+    FILE *file;
+    file = fopen("input.txt", "r");
+    readFile(file);
 
     // Free the block of memory allocated for each string
     for (size_t i = 0; i < total_lines; i++)
