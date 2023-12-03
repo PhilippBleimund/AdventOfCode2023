@@ -10,7 +10,7 @@ char **lines;
 size_t total_lines = 0;
 size_t total_chars = 0;
 
-char numbers[9][5] = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
+char numbers[9][6] = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
 
 int calculate01(){
     int sum = 0;
@@ -64,7 +64,7 @@ int calculate02(){
             if(lines[i][j] <= '9' && lines[i][j] != '\n'){
                 left_most = lines[i][j];
                 left_most_index = j;
-                printf("%c", left_most);
+                printf(" %c ", left_most);
                 break;
             }
         }
@@ -72,7 +72,7 @@ int calculate02(){
             if(lines[i][j] <= '9' && lines[i][j] != '\n'){
                 right_most = lines[i][j];
                 right_most_index = j;
-                printf(" / %c", right_most);
+                printf(" %c  / ", right_most);
                 break;
             }
         }
@@ -81,7 +81,7 @@ int calculate02(){
         int *final_pos_max = malloc(sizeof(int) * 9);
         // scope one number
         for(size_t j = 0; j < 9; j++){
-            int *pos = malloc(line_lenght);
+            int *pos = malloc(sizeof(int) * line_lenght);
             int counter = 0;
             // scope for every occurance of number
             for(size_t k = 0; k < line_lenght; k++){
@@ -103,6 +103,8 @@ int calculate02(){
             }
             final_pos_min[j] = current_min;
             final_pos_max[j] = current_max;
+
+            free(pos);
         }
 
         // determine the winner min number and winner max number
@@ -119,6 +121,13 @@ int calculate02(){
             }
         }
         
+        printf(" %d ", left_most_str);
+        printf(" %d ", right_most_str);
+
+        // free all arrays
+        free(final_pos_min);
+        free(final_pos_max);
+
         // calculate final number
         int sub_sum = 0;
         if(left_most_str_index < left_most_index){
