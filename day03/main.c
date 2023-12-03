@@ -10,12 +10,118 @@ char **lines;
 size_t total_lines = 0;
 size_t total_chars = 0;
 
-void calculate01(){
-    
-    
+typedef struct{
+    int value;
+    int length;
+    int *x;
+    int *y;
+} number;
+
+number *all_numbers;
+int all_numbers_index = 0;
+
+int total_sum = 0;
+
+void freeNumbers(){
+    for(int i = 0; i < all_numbers_index; i++){
+        free(all_numbers[i].x);
+        free(all_numbers[i].y);
+    }
+    free(all_numbers);
 }
 
-void readFile(FILE *file){
+void calculate01(){
+
+    all_numbers = malloc(sizeof(number) * total_lines * 140);
+
+    for(int i = 0; i < total_lines; i++){
+        size_t line_lenght = strlen(lines[i]);
+
+        bool is_new_number = false;
+        int curr_value = 0;
+        int curr_lenght = 0;
+        int *curr_x = malloc(sizeof(int)*141);
+        int *curr_y = malloc(sizeof(int)*141);
+
+        for(int j = 0; j < line_lenght; j++){
+            if(lines[i][j] <= '9' && lines[i][j] >= '0' && lines[i][j] != '\n'){
+                if(is_new_number == false){
+                    is_new_number = true;
+                    curr_value = (lines[i][j] - '0');
+                    curr_x[curr_lenght] = i;
+                    curr_y[curr_lenght] = j;
+                    curr_lenght++;
+                }else{
+                    curr_value = curr_value * 10;
+                    curr_value += (lines[i][j] - '0');
+                    curr_x[curr_lenght] = i;
+                    curr_y[curr_lenght] = j;
+                    curr_lenght++;
+                }
+            }else{
+                if(is_new_number == true){
+                    number new_number;
+                    new_number.value = curr_value;
+                    new_number.length = curr_lenght;
+                    new_number.x = malloc(sizeof(int) * curr_lenght);
+                    new_number.y = malloc(sizeof(int) * curr_lenght);
+                    for(int k = 0; k < curr_lenght; k++){
+                        new_number.x[k] = curr_x[k];
+                        new_number.y[k] = curr_y[k];
+                    }
+                    all_numbers[all_numbers_index] = new_number;
+                    all_numbers_index++;
+                    is_new_number = false;
+
+                    // reset
+                    curr_value = 0;
+                    curr_lenght = 0;
+                }
+            }
+        }
+
+        free(curr_x);
+        free(curr_y);
+    }
+
+    for(int i = 0; i < all_numbers_index; i++){
+        printf("%d \n", all_numbers[i].value);
+    }
+
+    for(int i = 0; i < total_lines; i++){
+        size_t line_lenght = strlen(lines[i]);
+
+        for(int j = 0; j < line_lenght; j++){
+            if((lines[i][j] >= '!' && lines[i][j] <= '/' && lines[i][j] != '.') || 
+               (lines[i][j] >= ':' && lines[i][j] <= '~')){
+                
+                // found special character
+                // check every number if it is in range
+                for(int k = 0; k < all_numbers_index; k++){
+                    // check every coordinate of number. It is in range when one coordinate is in range
+                    int sub_sum = 0;
+                    for(int l = 0; l < all_numbers[k].length; l++){
+                        int diff_x = abs(all_numbers[k].x[l] - i);
+                        int diff_y = abs(all_numbers[k].y[l] - j);
+                        
+                        if(diff_x <= 1 && diff_y <= 1){
+                            sub_sum = all_numbers[k].value;
+                        }
+                    }
+                    if(sub_sum != 0)
+                        printf("\nvalid number: %d", sub_sum);
+                    total_sum += sub_sum;
+                }
+            }
+        }
+    }
+
+    printf("\n Total Sum: %d \n ", total_sum);
+    
+    freeNumbers();
+}
+
+int readFile(FILE *file){
     if (file == NULL){
         printf("Error opening file.\n");
         perror("Error");
@@ -75,13 +181,18 @@ void readFile(FILE *file){
     lines = realloc(lines, sizeof(char *) * total_lines);
     
     fclose(file);
+    return 0;
 }
 
 int main(){
     
     FILE *file;
     file = fopen("input.txt", "r");
-    readFile(file);
+    int error = readFile(file);
+    if(error != 0)
+        return error;
+
+    calculate01();
 
     // Free the block of memory allocated for each string
     for (size_t i = 0; i < total_lines; i++)
